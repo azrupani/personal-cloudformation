@@ -1,0 +1,27 @@
+{
+	"Description": "This Stack creates a VPC with a CIDR given in the parameters file",
+	"Parameters": {
+		"CidrBlock": {
+			"Description": "CIDR Parameter Input for VPC",
+			"Type": "String",
+			"Default": "10.0.0.0/24"
+		}
+	},
+	"Resources": {
+		"VPCTest": {
+			"Type": "AWS::EC2::VPC",
+			"Properties": {
+				"CidrBlock": { "Ref": "CidrBlock" },
+				"EnableDnsSupport": true,
+				"EnableDnsHostnames": true,
+				"InstanceTenancy": "default",
+				"Tags": [ 
+						{ 
+							"Key": "Object", 
+							"Value": "VPCTest" 
+						}
+					]
+				}
+			}
+		}
+	}

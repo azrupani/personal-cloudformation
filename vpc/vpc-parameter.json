@@ -1,0 +1,6 @@
+[
+	{
+		"ParameterKey": "CidrBlock",
+		"ParameterValue": "10.10.10.0/24"
+	}
+]
