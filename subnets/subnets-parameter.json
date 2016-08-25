@@ -1,0 +1,30 @@
+[
+	{
+		"ParameterKey": "LambdaARN",
+		"ParameterValue": "arn:aws:lambda:ap-southeast-2:896895032509:function:vpc-LookupStackOutputs-V3R1SJ4YRKF0"
+	},
+	{
+		"ParameterKey": "CIDRPrivateSubnet1",
+		"ParameterValue": "10.10.10.0/27"
+	},
+	{
+		"ParameterKey": "CIDRPrivateSubnet2",
+		"ParameterValue": "10.10.10.32/27"
+	},
+	{
+		"ParameterKey": "CIDRDbSubnet1",
+		"ParameterValue": "10.10.10.64/27"
+	},
+	{
+		"ParameterKey": "CIDRDbSubnet2",
+		"ParameterValue": "10.10.10.96/27"
+	},
+	{
+		"ParameterKey": "CIDRPublicSubnet1",
+		"ParameterValue": "10.10.10.128/27"
+	},
+	{
+		"ParameterKey": "CIDRPublicSubnet2",
+		"ParameterValue": "10.10.10.160/27"
+	}
+]

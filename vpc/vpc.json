@@ -1,5 +1,5 @@
 {
-	"Description": "This Stack creates a VPC with a CIDR given in the parameters file",
+	"Description": "This Stack creates a VPC, IGW with a CIDR given in the parameters file",
 	"Parameters": {
 		"CidrBlock": {
 			"Description": "CIDR Parameter Input for VPC",
@@ -8,7 +8,7 @@
 		}
 	},
 	"Resources": {
-		"VPCTest": {
+		"VPC": {
 			"Type": "AWS::EC2::VPC",
 			"Properties": {
 				"CidrBlock": { "Ref": "CidrBlock" },
@@ -16,12 +16,116 @@
 				"EnableDnsHostnames": true,
 				"InstanceTenancy": "default",
 				"Tags": [ 
-						{ 
-							"Key": "Object", 
-							"Value": "VPCTest" 
-						}
-					]
+					{ 
+						"Key": "Object", 
+						"Value": "VPC" 
+					}
+				]
+			}
+		},
+		"IGW": {
+			"Type": "AWS::EC2::InternetGateway",
+			"DependsOn": [ "VPC" ] ,
+			"Properties": {
+				"Tags": [ 
+					{ 
+						"Key": "Object",
+						"Value": "IGW"
+					} 
+				]
+			}
+		},
+		"IGWAttachment": {
+			"Type": "AWS::EC2::VPCGatewayAttachment",
+			"DependsOn": [ "IGW" ],
+			"Properties": {
+				"VpcId": { "Ref": "VPC" },
+				"InternetGatewayId": { "Ref": "IGW" }
+			}
+		},
+		"LambdaExecutionRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+              "AssumeRolePolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [{
+            "Effect": "Allow",
+            "Principal": {"Service": ["lambda.amazonaws.com"]},
+            "Action": ["sts:AssumeRole"]
+                }]
+              },
+              "Path": "/",
+              "Policies": [{
+                "PolicyName": "root",
+                "PolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [{
+              "Effect": "Allow",
+              "Action": ["logs:CreateLogGroup","logs:CreateLogStream","logs:PutLogEvents"],
+              "Resource": "arn:aws:logs:*:*:*"
+            },
+            {
+              "Effect": "Allow",
+              "Action": ["cloudformation:DescribeStacks"],
+              "Resource": "*"
+            }]
+                }
+              }]
+            }
+	},
+		"LookupStackOutputs": {
+			"Type": "AWS::Lambda::Function",
+			"Properties": {
+				"Code": {
+					"ZipFile":  { "Fn::Join": ["\n", [
+						"var response = require('cfn-response');",
+						"exports.handler = function(event, context) {",
+						"    console.log('REQUEST RECEIVED:\\n', JSON.stringify(event));",
+						"    if (event.RequestType == 'Delete') {",
+						"        response.send(event, context, response.SUCCESS);",
+						"        return;",
+						"    }",
+						"    var stackName = event.ResourceProperties.StackName;",
+						"    var responseData = {};",
+						"    if (stackName) {",
+						"        var aws = require('aws-sdk');",
+						"        var cfn = new aws.CloudFormation();",
+						"        cfn.describeStacks({StackName: stackName}, function(err, data) {",
+						"            if (err) {",
+						"                responseData = {Error: 'DescribeStacks call failed'};",
+						"                console.log(responseData.Error + ':\\n', err);",
+						"                response.send(event, context, response.FAILED, responseData);",
+						"            }",
+						"            else {",
+						"                data.Stacks[0].Outputs.forEach(function(output) {",
+						"                    responseData[output.OutputKey] = output.OutputValue;",
+						"                });",
+						"                response.send(event, context, response.SUCCESS, responseData);",
+						"            }",
+						"        });",
+						"    } else {",
+						"        responseData = {Error: 'Stack name not specified'};",
+						"        console.log(responseData.Error);",
+						"        response.send(event, context, response.FAILED, responseData);",
+						"    }",
+						"};"
+					]]}
+				},
+				"Handler": "index.handler",
+				"Runtime": "nodejs",
+				"Timeout": "30",
+				"Role": { "Fn::GetAtt" : [ "LambdaExecutionRole", "Arn"] }
 				}
 			}
+	},
+	"Outputs": {
+		"VpcID": {
+			"Value": { "Ref": "VPC" },
+			"Description": "VpcId of the VPC Created:"
+		},
+		"LambdaVpcARN": {
+			"Value": { "Fn::GetAtt": [ "LookupStackOutputs", "Arn" ] },
+			"Description": "Unique ARN of Lamba Function Exposing VPC Info:"
 		}
 	}
+}

@@ -1,0 +1,108 @@
+{
+	"Description": "This Template creates Private, DB and Public Subnets",
+	"Parameters": {
+		"LambdaARN": {
+			"Description": "ARN of the Lambda Function which will expose the VPC Information as contained in the Outputs Section",
+			"Type": "String"
+		},
+		"CIDRPrivateSubnet1": {
+			"Description": "CIDR of the Private Subnet 1",
+			"Type": "String",
+			"Default": "10.0.0.0/27"
+		},
+		"CIDRPrivateSubnet2": {
+			"Description": "CIDR of the Private Subnet 2",
+			"Type": "String",
+			"Default": "10.0.0.32/27"
+		},
+		"CIDRDbSubnet1": {
+			"Description": "CIDR of the DB Subnet 1",
+			"Type": "String",
+			"Default": "10.0.0.64/27"
+		},
+		"CIDRDbSubnet2": {
+			"Description": "CIDR of the DB Subnet 2",
+			"Type": "String",
+			"Default": "10.0.0.96/27"
+		},
+		"CIDRPublicSubnet1": {
+			"Description": "CIDR of the Public Subnet 1",
+			"Type": "String",
+			"Default": "10.0.0.128/27"
+		},
+		"CIDRPublicSubnet2": {
+			"Description": "CIDR of the Public Subnet 2",
+			"Type": "String",
+			"Default": "10.0.0.160/27"
+		}
+	},
+	"Resources": {
+		"VpcInfo": {
+			"Type": "Custom::VpcInfo",
+			"Properties": {
+				"ServiceToken": { "Ref": "LambdaARN" },
+				"StackName": "vpc"
+			}
+		},
+		"PrivateSubnet1": {
+			"Type": "AWS::EC2::Subnet",
+			"Properties": {
+				"AvailabilityZone": "ap-southeast-2a",
+				"CidrBlock": { "Ref": "CIDRPrivateSubnet1" },
+				"MapPublicIpOnLaunch": false,
+				"Tags": [ { "Key": "Object", "Value": "PrivateSubnet1" } ],
+				"VpcId": { "Fn::GetAtt": ["VpcInfo", "VpcID"] }
+			}
+		},
+		"PrivateSubnet2": {
+			"Type": "AWS::EC2::Subnet",
+			"Properties": {
+				"AvailabilityZone": "ap-southeast-2b",
+				"CidrBlock": { "Ref": "CIDRPrivateSubnet2" },
+				"MapPublicIpOnLaunch": false,
+				"Tags": [ { "Key": "Object", "Value": "PrivateSubnet2" } ],
+				"VpcId": { "Fn::GetAtt": ["VpcInfo", "VpcID"] }
+			}
+		},
+		"DbSubnet1": {
+			"Type": "AWS::EC2::Subnet",
+			"Properties": {
+				"AvailabilityZone": "ap-southeast-2a",
+				"CidrBlock": { "Ref": "CIDRDbSubnet1" },
+				"MapPublicIpOnLaunch": false,
+				"Tags": [ { "Key": "Object", "Value": "DbSubnet1" } ],
+				"VpcId": { "Fn::GetAtt": ["VpcInfo", "VpcID"] }
+			}
+		},
+		"DbSubnet2": {
+			"Type": "AWS::EC2::Subnet",
+			"Properties": {
+				"AvailabilityZone": "ap-southeast-2b",
+				"CidrBlock": { "Ref": "CIDRDbSubnet2" },
+				"MapPublicIpOnLaunch": false,
+				"Tags": [ { "Key": "Object", "Value": "DbSubnet2" } ],
+				"VpcId": { "Fn::GetAtt": ["VpcInfo", "VpcID"] }
+			}
+		},
+		"PublicSubnet1": {
+			"Type": "AWS::EC2::Subnet",
+			"Properties": {
+				"AvailabilityZone": "ap-southeast-2a",
+				"CidrBlock": { "Ref": "CIDRPublicSubnet1" },
+				"MapPublicIpOnLaunch": false,
+				"Tags": [ { "Key": "Object", "Value": "PublicSubnet1" } ],
+				"VpcId": { "Fn::GetAtt": ["VpcInfo", "VpcID"] }
+			}
+		},
+		"PublicSubnet2": {
+			"Type": "AWS::EC2::Subnet",
+			"Properties": {
+				"AvailabilityZone": "ap-southeast-2b",
+				"CidrBlock": { "Ref": "CIDRPublicSubnet2" },
+				"MapPublicIpOnLaunch": false,
+				"Tags": [ { "Key": "Object", "Value": "PublicSubnet1" } ],
+				"VpcId": { "Fn::GetAtt": ["VpcInfo", "VpcID"] }
+			}
+		}
+	}
+}
