@@ -123,9 +123,9 @@
 			"Value": { "Ref": "VPC" },
 			"Description": "VpcId of the VPC Created:"
 		},
-		"LambdaVpcARN": {
+		"LambdaARN": {
 			"Value": { "Fn::GetAtt": [ "LookupStackOutputs", "Arn" ] },
-			"Description": "Unique ARN of Lamba Function Exposing VPC Info:"
+			"Description": "Unique ARN of Lamba Function Exposing Stack Outputs:"
 		}
 	}
 }
