@@ -1,0 +1,41 @@
+{
+	"Description": "Stack Description To Be Provided Here",
+	"Parameters": {
+		"LambdaARN": {
+      "Description": "ARN of the Lambda Function which will expose Outputs from other stacks",
+      "Type": "String"
+    },
+		"<Sample>StackName": {
+      "Description": "Name of the Stack which creates <Sample>",
+      "Type": "String",
+      "Default": "<Sample>"
+    },
+		"SampleParameter1": {
+			"Description": "Description of Parameter 1 To be Provided Here",
+			"Type": "String",
+			"Default": "SampleString"
+		}
+	},
+	"Resources": {
+		"StackOutput": {
+      "Type": "Custom::StackInfo",
+      "Properties": {
+        "ServiceToken": { "Ref": "LambdaARN" },
+        "StackName": { "Ref": "<Sample>StackName" }
+      }
+    },
+		"SampleResource1": {
+			"Type": "AWS::<Service>::<Component>",
+			"DependsOn": "StackOutput",
+			"Properties": {
+					"SampleProperty1Key": "SampleProperty1Value"
+			}
+		}
+	},
+	"Outputs": {
+		"SampleResource1Output": {
+				"Value": { "Ref": "SampleResource1" },
+				"Description": "Description of SampleResource1Output"
+		}
+	}
+}

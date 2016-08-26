@@ -1,0 +1,10 @@
+[
+	{
+		"ParameterKey": "LambdaARN",
+		"ParameterValue": "<CHANGEME>"
+	},
+	{
+		"ParameterKey": "SampleParameter1",
+		"ParameterValue": "SampleParameter1Value"
+	}
+]

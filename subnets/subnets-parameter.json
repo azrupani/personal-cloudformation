@@ -1,7 +1,7 @@
 [
 	{
 		"ParameterKey": "LambdaARN",
-		"ParameterValue": "$CHANGEME"
+		"ParameterValue": "<CHANGEME>"
 	},
 	{
 		"ParameterKey": "CIDRPrivateSubnet1",

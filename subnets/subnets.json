@@ -5,6 +5,11 @@
 			"Description": "ARN of the Lambda Function which will expose Outputs from other stacks",
 			"Type": "String"
 		},
+		"VpcStackName": {
+			"Description": "Name of the Stack which creates VPC",
+			"Type": "String",
+			"Default": "vpc"
+		},
 		"CIDRPrivateSubnet1": {
 			"Description": "CIDR of the Private Subnet 1",
 			"Type": "String",
@@ -38,14 +43,15 @@
 	},
 	"Resources": {
 		"StackOutput": {
-			"Type": "Custom::VpcInfo",
+			"Type": "Custom::StackOutput",
 			"Properties": {
 				"ServiceToken": { "Ref": "LambdaARN" },
-				"StackName": "vpc"
+				"StackName": { "Ref": "VpcStackName" }
 			}
 		},
 		"PrivateSubnet1": {
 			"Type": "AWS::EC2::Subnet",
+			"DependsOn": "StackOutput",
 			"Properties": {
 				"AvailabilityZone": "ap-southeast-2a",
 				"CidrBlock": { "Ref": "CIDRPrivateSubnet1" },
@@ -56,6 +62,7 @@
 		},
 		"PrivateSubnet2": {
 			"Type": "AWS::EC2::Subnet",
+			"DependsOn": "StackOutput",
 			"Properties": {
 				"AvailabilityZone": "ap-southeast-2b",
 				"CidrBlock": { "Ref": "CIDRPrivateSubnet2" },
@@ -66,6 +73,7 @@
 		},
 		"DbSubnet1": {
 			"Type": "AWS::EC2::Subnet",
+			"DependsOn": "StackOutput",
 			"Properties": {
 				"AvailabilityZone": "ap-southeast-2a",
 				"CidrBlock": { "Ref": "CIDRDbSubnet1" },
@@ -76,6 +84,7 @@
 		},
 		"DbSubnet2": {
 			"Type": "AWS::EC2::Subnet",
+			"DependsOn": "StackOutput",
 			"Properties": {
 				"AvailabilityZone": "ap-southeast-2b",
 				"CidrBlock": { "Ref": "CIDRDbSubnet2" },
@@ -86,6 +95,7 @@
 		},
 		"PublicSubnet1": {
 			"Type": "AWS::EC2::Subnet",
+			"DependsOn": "StackOutput",
 			"Properties": {
 				"AvailabilityZone": "ap-southeast-2a",
 				"CidrBlock": { "Ref": "CIDRPublicSubnet1" },
@@ -96,6 +106,7 @@
 		},
 		"PublicSubnet2": {
 			"Type": "AWS::EC2::Subnet",
+			"DependsOn": "StackOutput",
 			"Properties": {
 				"AvailabilityZone": "ap-southeast-2b",
 				"CidrBlock": { "Ref": "CIDRPublicSubnet2" },
