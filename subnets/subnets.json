@@ -104,5 +104,31 @@
 				"VpcId": { "Fn::GetAtt": ["VpcInfo", "VpcID"] }
 			}
 		}
+	},
+	"Outputs": {
+		"PrivateSubnet1ID": {
+			"Value": { "Ref": "PrivateSubnet1" },
+			"Description": "Subnet ID of Private Subnet 1"
+		},
+		"PrivateSubnet2ID": {
+			"Value": { "Ref": "PrivateSubnet2" },
+			"Description": "Subnet ID of Private Subnet 2"
+		},
+		"DbSubnet1ID": {
+			"Value": { "Ref": "DbSubnet1" },
+			"Description": "Subnet ID of Db Subnet 1"
+		},
+		"DbSubnet2ID": {
+			"Value": { "Ref": "DbSubnet2" },
+			"Description": "Subnet ID of Db Subnet 2"
+		},
+		"PublicSubnet1ID": {
+			"Value": { "Ref": "PublicSubnet1" },
+			"Description": "Subnet ID of Public Subnet 1"
+		},
+		"PublicSubnet2ID": {
+			"Value": { "Ref": "PublicSubnet2" },
+			"Description": "Subnet ID of Public Subnet 2"
+		}
 	}
 }
