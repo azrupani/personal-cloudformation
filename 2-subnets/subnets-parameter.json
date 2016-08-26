@@ -1,7 +1,7 @@
 [
 	{
 		"ParameterKey": "LambdaARN",
-		"ParameterValue": "<CHANGEME>"
+		"ParameterValue": "arn:aws:lambda:ap-southeast-2:896895032509:function:vpc-LookupStackOutputs-1UXU7062SYM35"
 	},
 	{
 		"ParameterKey": "CIDRPrivateSubnet1",

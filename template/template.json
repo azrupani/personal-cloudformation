@@ -18,7 +18,7 @@
 	},
 	"Resources": {
 		"StackOutput": {
-      "Type": "Custom::StackInfo",
+      "Type": "Custom::StackOutput",
       "Properties": {
         "ServiceToken": { "Ref": "LambdaARN" },
         "StackName": { "Ref": "<Sample>StackName" }
@@ -29,7 +29,13 @@
 			"DependsOn": "StackOutput",
 			"Properties": {
 					"SampleProperty1Key": "SampleProperty1Value"
-			}
+			},
+			"Tags": [
+				{
+						"Key": "SampleTag",
+						"Value": "SampleTagValue"
+				}
+			]
 		}
 	},
 	"Outputs": {

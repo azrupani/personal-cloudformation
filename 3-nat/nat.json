@@ -1,0 +1,77 @@
+{
+	"Description": "This Stack Creates Elastic IPs and NAT Gateways",
+	"Parameters": {
+		"LambdaARN": {
+      "Description": "ARN of the Lambda Function which will expose Outputs from other stacks",
+      "Type": "String"
+    },
+		"SubnetsStackName": {
+      "Description": "Name of the Stack which creates Subnets",
+      "Type": "String",
+      "Default": "subnets"
+    }
+	},
+	"Resources": {
+		"StackOutput": {
+      "Type": "Custom::StackOutput",
+      "Properties": {
+        "ServiceToken": { "Ref": "LambdaARN" },
+        "StackName": { "Ref": "SubnetsStackName" }
+      }
+    },
+		"ElasticIp1": {
+			"Type": "AWS::EC2::EIP",
+			"Properties": {
+				"Domain": "vpc"
+			}
+		},
+		"ElasticIp2": {
+			"Type": "AWS::EC2::EIP",
+			"Properties": {
+				"Domain": "vpc"
+				}
+			},
+		"NatGateway1": {
+			"Type": "AWS::EC2::NatGateway",
+			"DependsOn": [ "StackOutput", "ElasticIp1" ],
+			"Properties": {
+				"AllocationId": { "Fn::GetAtt": ["ElasticIp1","AllocationId"] },
+				"SubnetId": { "Fn::GetAtt": ["StackOutput","PublicSubnet1ID"] }
+			}
+		},
+		"NatGateway2": {
+			"Type": "AWS::EC2::NatGateway",
+			"DependsOn": [ "StackOutput", "ElasticIp2" ],
+			"Properties": {
+				"AllocationId": { "Fn::GetAtt": ["ElasticIp2","AllocationId"] },
+				"SubnetId": { "Fn::GetAtt": ["StackOutput","PublicSubnet2ID"] }
+			}
+		}
+	},
+	"Outputs": {
+		"ElasticIp1Id": {
+				"Value": { "Fn::GetAtt": ["ElasticIp1","AllocationId"] },
+				"Description": "Elastic IP Allocation ID 2"
+		},
+		"ElasticIp2Id": {
+				"Value": { "Fn::GetAtt": ["ElasticIp2","AllocationId"] },
+				"Description": "Elastic IP Allocation ID 2"
+		},
+		"ElasticIpAddr1": {
+				"Value": { "Ref": "ElasticIp1" },
+				"Description": "Elastic IP Address 1"
+		},
+		"ElasticIpAddr2": {
+				"Value": { "Ref": "ElasticIp2" },
+				"Description": "Elastic IP Address 2"
+		},
+		"NatGatewayId1": {
+				"Value": { "Ref": "NatGateway1" },
+				"Description": "Nat Gateway ID 1"
+		},
+		"NatGatewayId2": {
+				"Value": { "Ref": "NatGateway2" },
+				"Description": "NAT Gateway ID 2"
+		}
+	}
+}
