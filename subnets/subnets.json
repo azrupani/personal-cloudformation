@@ -2,7 +2,7 @@
 	"Description": "This Template creates Private, DB and Public Subnets",
 	"Parameters": {
 		"LambdaARN": {
-			"Description": "ARN of the Lambda Function which will expose the VPC Information as contained in the Outputs Section",
+			"Description": "ARN of the Lambda Function which will expose Outputs from other stacks",
 			"Type": "String"
 		},
 		"CIDRPrivateSubnet1": {
@@ -37,7 +37,7 @@
 		}
 	},
 	"Resources": {
-		"VpcInfo": {
+		"StackOutput": {
 			"Type": "Custom::VpcInfo",
 			"Properties": {
 				"ServiceToken": { "Ref": "LambdaARN" },
@@ -51,7 +51,7 @@
 				"CidrBlock": { "Ref": "CIDRPrivateSubnet1" },
 				"MapPublicIpOnLaunch": false,
 				"Tags": [ { "Key": "Object", "Value": "PrivateSubnet1" } ],
-				"VpcId": { "Fn::GetAtt": ["VpcInfo", "VpcID"] }
+				"VpcId": { "Fn::GetAtt": ["StackOutput", "VpcID"] }
 			}
 		},
 		"PrivateSubnet2": {
@@ -61,7 +61,7 @@
 				"CidrBlock": { "Ref": "CIDRPrivateSubnet2" },
 				"MapPublicIpOnLaunch": false,
 				"Tags": [ { "Key": "Object", "Value": "PrivateSubnet2" } ],
-				"VpcId": { "Fn::GetAtt": ["VpcInfo", "VpcID"] }
+				"VpcId": { "Fn::GetAtt": ["StackOutput", "VpcID"] }
 			}
 		},
 		"DbSubnet1": {
@@ -71,7 +71,7 @@
 				"CidrBlock": { "Ref": "CIDRDbSubnet1" },
 				"MapPublicIpOnLaunch": false,
 				"Tags": [ { "Key": "Object", "Value": "DbSubnet1" } ],
-				"VpcId": { "Fn::GetAtt": ["VpcInfo", "VpcID"] }
+				"VpcId": { "Fn::GetAtt": ["StackOutput", "VpcID"] }
 			}
 		},
 		"DbSubnet2": {
@@ -81,7 +81,7 @@
 				"CidrBlock": { "Ref": "CIDRDbSubnet2" },
 				"MapPublicIpOnLaunch": false,
 				"Tags": [ { "Key": "Object", "Value": "DbSubnet2" } ],
-				"VpcId": { "Fn::GetAtt": ["VpcInfo", "VpcID"] }
+				"VpcId": { "Fn::GetAtt": ["StackOutput", "VpcID"] }
 			}
 		},
 		"PublicSubnet1": {
@@ -91,7 +91,7 @@
 				"CidrBlock": { "Ref": "CIDRPublicSubnet1" },
 				"MapPublicIpOnLaunch": false,
 				"Tags": [ { "Key": "Object", "Value": "PublicSubnet1" } ],
-				"VpcId": { "Fn::GetAtt": ["VpcInfo", "VpcID"] }
+				"VpcId": { "Fn::GetAtt": ["StackOutput", "VpcID"] }
 			}
 		},
 		"PublicSubnet2": {
@@ -101,7 +101,7 @@
 				"CidrBlock": { "Ref": "CIDRPublicSubnet2" },
 				"MapPublicIpOnLaunch": false,
 				"Tags": [ { "Key": "Object", "Value": "PublicSubnet1" } ],
-				"VpcId": { "Fn::GetAtt": ["VpcInfo", "VpcID"] }
+				"VpcId": { "Fn::GetAtt": ["StackOutput", "VpcID"] }
 			}
 		}
 	},
